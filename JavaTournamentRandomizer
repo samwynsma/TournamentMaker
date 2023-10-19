@@ -1,0 +1,69 @@
+package randomness;
+
+import java.util.*;
+import java.io.*;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class PseudoRandomGenerator {
+
+	public static void main(String[] args) {
+		int[] results = randomList(512);
+		ArrayList<String> characters = new ArrayList<String>();
+		for(int i = 0; i < results.length; i++)
+		{
+			System.out.println(results[i]);
+		}
+
+		try {
+			characters = new ArrayList<>(Files.readAllLines(Paths.get("characterNames.txt")));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		FileWriter outFile = null;
+		try {
+			outFile = new FileWriter("tourneyFile.txt");
+			for(int i = 0; i < results.length; i++)
+			{
+				outFile.write(Integer.toString(results[i]));
+				outFile.write(". ");
+				outFile.write(characters.get(results[i]-1));
+				outFile.write("\n");
+				if(i % 2 == 1)
+					outFile.write("\n");
+			}
+			outFile.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static int[] randomList(int num) {
+		int[] randomNums = new int[num];
+		ArrayList<Integer> startList = new ArrayList<Integer>();
+		for(int i = 0; i < num; i++)
+		{
+			startList.add(i+1);
+		}
+		
+		int location = 0;
+		Random r = new Random();
+		
+		while(startList.size() > 0)
+		{
+			int numToRemove = r.nextInt(startList.size());
+			int randInt = startList.get(numToRemove);
+			randomNums[location] = randInt;
+			startList.remove(numToRemove);
+			
+			location++;
+		}
+		return randomNums;
+	}
+
+}
